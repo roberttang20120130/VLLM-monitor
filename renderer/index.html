@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:;" />
+  <title>vLLM Monitor</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- ===== Sidebar: server list ===== -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>vLLM Monitor</h1>
+        <button id="add-btn" class="btn-primary" title="Add a vLLM server">+ Add server</button>
+      </div>
+      <ul id="server-list" class="server-list">
+        <!-- server rows injected by JS -->
+      </ul>
+      <div id="encryption-note" class="encryption-note hidden">
+        API keys are stored in <strong>plaintext</strong> on this system (no OS keyring available).
+      </div>
+    </aside>
+
+    <!-- ===== Main panel: detail for the selected server ===== -->
+    <main class="main">
+      <header class="main-header">
+        <div class="title-block">
+          <span id="conn-dot" class="dot dot-unknown"></span>
+          <h2 id="detail-name">No server selected</h2>
+        </div>
+        <div class="header-meta">
+          <span id="detail-url" class="muted"></span>
+          <span id="detail-error" class="error-text"></span>
+        </div>
+      </header>
+
+      <!-- jam status banner -->
+      <div id="jam-banner" class="jam-banner jam-clear hidden">
+        <span id="jam-icon" class="jam-icon"></span>
+        <div class="jam-text">
+          <span id="jam-status">Operating normally</span>
+          <span id="jam-signals" class="jam-signals"></span>
+        </div>
+      </div>
+
+      <!-- stat cards -->
+      <section class="cards" id="cards">
+        <div class="card" data-key="genTokS">
+          <div class="card-label">Generation tok/s</div>
+          <div class="card-value" id="card-genTokS">—</div>
+        </div>
+        <div class="card" data-key="promptTokS">
+          <div class="card-label">Prompt tok/s</div>
+          <div class="card-value" id="card-promptTokS">—</div>
+        </div>
+        <div class="card" data-key="running">
+          <div class="card-label">Running</div>
+          <div class="card-value" id="card-running">—</div>
+        </div>
+        <div class="card" data-key="waiting">
+          <div class="card-label">Waiting (queue)</div>
+          <div class="card-value" id="card-waiting">—</div>
+        </div>
+        <div class="card" data-key="swapped">
+          <div class="card-label">Swapped</div>
+          <div class="card-value" id="card-swapped">—</div>
+        </div>
+        <div class="card" data-key="gpuCache">
+          <div class="card-label">GPU cache</div>
+          <div class="card-value" id="card-gpuCache">—</div>
+        </div>
+        <div class="card" data-key="ttft">
+          <div class="card-label">TTFT (s)</div>
+          <div class="card-value" id="card-ttft">—</div>
+        </div>
+        <div class="card" data-key="tpot">
+          <div class="card-label">TPOT (s)</div>
+          <div class="card-value" id="card-tpot">—</div>
+        </div>
+      </section>
+
+      <!-- live chart -->
+      <section class="chart-wrap">
+        <div class="chart-header">
+          <h3>Throughput &amp; queue over time</h3>
+          <div class="legend">
+            <span class="leg leg-gen"></span>Gen tok/s
+            <span class="leg leg-prompt"></span>Prompt tok/s
+            <span class="leg leg-running"></span>Running
+            <span class="leg leg-waiting"></span>Waiting
+          </div>
+        </div>
+        <canvas id="chart" width="900" height="320"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== Add/Edit modal ===== -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <h3 id="modal-title">Add vLLM server</h3>
+      <form id="server-form">
+        <label>
+          Name
+          <input type="text" name="name" placeholder="prod-gpu-01" required />
+        </label>
+        <label>
+          vLLM server URL
+          <input type="text" name="vllmUrl" placeholder="http://10.0.0.5:8000" required />
+        </label>
+        <label class="advanced">
+          Metrics URL <span class="hint">(optional — only if /metrics is on a different port)</span>
+          <input type="text" name="metricsUrl" placeholder="http://10.0.0.5:8000" />
+        </label>
+        <label>
+          API key <span class="hint">(Bearer token; leave empty if your server has no --api-key)</span>
+          <input type="password" name="apiKey" placeholder="sk-..." autocomplete="off" />
+        </label>
+        <label>
+          Poll interval (seconds)
+          <input type="number" name="pollInterval" min="1" max="60" step="1" value="2" required />
+        </label>
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel" class="btn-ghost">Cancel</button>
+          <button type="submit" class="btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

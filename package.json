@@ -1,0 +1,51 @@
+{
+  "name": "vllm-monitor",
+  "version": "1.2.0",
+  "description": "Cross-platform desktop dashboard for monitoring multiple vLLM inference servers (tokens/sec, queue/running requests, GPU cache).",
+  "author": {
+    "name": "ZCode",
+    "email": "zcode@example.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/zcode/vllm-monitor",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "mock": "node mock/mock-vllm.js",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.zcode.vllm-monitor",
+    "productName": "vLLM Monitor",
+    "files": [
+      "src/**/*",
+      "renderer/**/*"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "maintainer": "ZCode <zcode@example.com>"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "mac": {
+      "target": [
+        "zip"
+      ],
+      "category": "public.app-category.utilities"
+    }
+  }
+}
