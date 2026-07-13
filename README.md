@@ -27,6 +27,11 @@ for debian and ubuntu linux after downloading the .deb:
 sudo dpkg -i vllm-monitor_1.0.0_amd64_ubuntu_debian.deb
 ```
 
+for other distros, use the .appimage, to make sure stuff works:
+```terminal
+echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/99-userns.conf
+sudo sysctl --system
+```
 
 > **China / slow registry:** use the npmmirror mirror:
 > ```bash
