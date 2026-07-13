@@ -22,7 +22,7 @@ No Python, no GPU, no vLLM install needed on the monitoring machine — the app 
 ## Install dependencies
 
 
-for linux:
+for debian and ubuntu linux after downloading the .deb:
 ```terminal
 sudo dpkg -i vllm-monitor_1.0.0_amd64_ubuntu_debian.deb
 ```
