@@ -21,10 +21,12 @@ No Python, no GPU, no vLLM install needed on the monitoring machine — the app 
 
 ## Install dependencies
 
-```bash
-cd vllm-monitor
-npm install
+
+for linux:
+```terminal
+sudo dpkg -i vllm-monitor_1.0.0_amd64_ubuntu_debian.deb
 ```
+
 
 > **China / slow registry:** use the npmmirror mirror:
 > ```bash
